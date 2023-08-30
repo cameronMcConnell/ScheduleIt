@@ -1,18 +1,29 @@
 import './styles/home.css';
-import { useState } from 'react';
+import Login from './components/login';
+import Create from './components/create';
+import Schedule from './components/schedule';
+import { BrowserRouter, Route, Link, Routes } from 'react-router-dom';
 
 const Home = (): JSX.Element => {
-    
-    // State to render component that user is on currently.
-    // 0 : init
-    // 1 : login
-    // 2 : create
-    // 3 : schedule
-    let [currPage, setCurrPage] = useState<number>(0);
-
     return (
-        <div>
-        </div>
+        <BrowserRouter>
+            <div>
+                <button>
+                    <Link to='/login'>Login</Link>
+                </button>
+                <button>
+                    <Link to='/create'>Create</Link>
+                </button>
+                <button>
+                    <Link to='/schedule'>Schedule</Link>
+                </button>
+            </div>
+            <Routes>
+                <Route path='/login' Component={Login} />
+                <Route path='/create' Component={Create} />
+                <Route path='/schedule' Component={Schedule} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 
