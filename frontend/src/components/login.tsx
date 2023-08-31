@@ -1,12 +1,16 @@
 import '../styles/login.css';
-import Home from '../home';
-import Schedule from './schedule';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import '../styles/shared.css';
 
-const Login = (): JSX.Element => {
+// Define prop return function for changing component number back in main component.
+interface compProps {
+    onReturn: (newCompNum: number) => void;
+}
+
+const Login: React.FC<compProps> = (props): JSX.Element => {
     return (
         <div>
-            Login
+            <button onClick={() => props.onReturn(0)}>Return to Home</button>
+            <button onClick={() => props.onReturn(3)}>Login</button>
         </div>
     );
 }
