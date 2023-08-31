@@ -8,9 +8,17 @@ interface compProps {
 
 const Init: React.FC<compProps> = (props): JSX.Element => {
     return (
-        <div>
-            <button onClick={() => props.onReturn(1)}>Login</button>
-            <button onClick={() => props.onReturn(2)}>Create Account</button>
+        <div className='component-container'>
+            <p>
+                ScheduleIt is a scheduling application that lets you create an account, 
+                save your weekly schedule to it, and view it next time you need to log in.
+                Backend implemented using Expo.js, Node.js, MongoDB and frontend with
+                React.js.
+            </p>
+            <div className='button-container'>
+                <button className='button-design' onClick={() => props.onReturn(1)}>Login</button>
+                <button className='button-design' onClick={() => props.onReturn(2)}>Create Account</button>
+            </div>
         </div>
     );
 }

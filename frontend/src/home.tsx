@@ -8,6 +8,9 @@ import { useState } from 'react';
 
 const Home = (): JSX.Element => {
 
+    // Logo next to app title.
+    const logo = require('./imgs/logo.png');
+
     // 0 : Init
     // 1 : Login
     // 2 : Create
@@ -33,6 +36,11 @@ const Home = (): JSX.Element => {
 
     return (
         <div id='home-div'>
+            <div id='title-container'>
+                <img src={logo} alt='SheduleIt Logo' id='logo'></img>
+                <h1>ScheduleIt</h1>
+                <img src={logo} alt='SheduleIt Logo' id='logo'></img>
+            </div>
             {switchComp(currComp)}
         </div>
     );

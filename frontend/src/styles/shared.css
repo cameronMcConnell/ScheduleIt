@@ -1,0 +1,51 @@
+h1 {
+    font-size: 48px;
+}
+
+p {
+    font-size: 24px;
+    text-align: center;
+}
+
+input {
+    font-size: 24px;
+}
+
+.component-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    column-gap: 16px;
+}
+
+.button-design {
+    font-size: 16px;
+    padding: 6px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.button-design:hover {
+    cursor: pointer;
+    background-color: lightgray;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    row-gap: 8px;
+}
+
+.label-container {
+    display: flex;
+    column-gap: 8px;
+    font-size: 24px;
+}
