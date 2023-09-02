@@ -18,6 +18,10 @@ const Home = (): JSX.Element => {
     // Mapping for which component to render.
     let [currComp, setCurrComp] = useState<number>(0);
 
+    // No need to use state for these variables. Will be passed as props to a component.
+    let schedule: object = {};
+    let username: string = '';
+
     // Switch to correct component to render.
     const switchComp = (compNum: number): JSX.Element => {
         switch (compNum) {
@@ -30,7 +34,9 @@ const Home = (): JSX.Element => {
     }
 
     // Used for when a component needs to alter the current component state.
-    const changeCompNum = (newCompNum: number): void => {
+    const changeCompNum = (newCompNum: number, currUsername: string, currSchedule: object): void => {
+        schedule = currSchedule;
+        username = currUsername;
         setCurrComp(newCompNum);
     }
 

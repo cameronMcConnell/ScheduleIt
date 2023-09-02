@@ -7,6 +7,9 @@ const app = express();
 const port = 5000;
 const url = 'mongodb+srv://cameronmcconne:<password>@scheduleit.xjdr7my.mongodb.net/?retryWrites=true&w=majority';
 
+// Database collection used in responses.
+let collection;
+
 // CORS headers.
 app.use(cors());
 
@@ -19,21 +22,51 @@ const connectToDB = async () => {
 
     // Get database and users collection. 
     const database = client.db('ScheduleIt');
-    var collection = database.collection('Users');
+    collection = database.collection('Users');
 }
 
 // Connect to database and give values to 
 connectToDB();
 
 // Handles login requests.
-app.get('/login', (req, res) => {
-    
+// Reason codes:
+// 1 : Error
+// 2 : Account doesn't exist
+app.post('/login', parser.json(), async (req, res) => {
+    try {
+        const result = await collection.findOne(req.body);
+        if (result) {
+            res.send(JSON.stringify({bool: true, schedule: result.schedule}));
+        } else {
+            res.send(JSON.stringify({bool: false, reason: 2}));
+        }
+    } catch (err) {
+        res.send(JSON.stringify({bool: false, reason: 1}));
+    }
 });
 
 // Handles create account requests.
-app.post('/create', parser.json(), (req, res) => {
-    console.log(req.body);
-    res.send(JSON.stringify({bool: true}))
+// Reason codes:
+// 1 : Error
+// 2 : Account exists
+app.post('/create', parser.json(), async (req, res) => {
+    // Check to see if username exists in database.
+    try {
+        const result = await collection.findOne({ username: req.body.username });
+        if (result) {
+            res.send(JSON.stringify({bool: false, reason: 2}));
+        }
+        else {
+            try {
+                await collection.insertOne(req.body);
+                res.send(JSON.stringify({bool: true}))
+            } catch (err) {
+                res.send(JSON.stringify({bool: false, reason: 1}));
+            }
+        }
+    } catch (err) {
+        res.send(JSON.stringify({bool: false, reason: 1}));
+    }
 })
 
 // Backend listens and awaits requests.

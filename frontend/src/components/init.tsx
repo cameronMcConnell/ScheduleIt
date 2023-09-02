@@ -3,7 +3,7 @@ import '../styles/shared.css';
 
 // Define prop return function for changing component number back in main component.
 interface compProps {
-    onReturn: (newCompNum: number) => void;
+    onReturn: (newCompNum: number, currUsername: string, currSchedule: object) => void;
 }
 
 const Init: React.FC<compProps> = (props): JSX.Element => {
@@ -16,8 +16,8 @@ const Init: React.FC<compProps> = (props): JSX.Element => {
                 React.js.
             </p>
             <div className='button-container'>
-                <button className='button-design' onClick={() => props.onReturn(1)}>Login</button>
-                <button className='button-design' onClick={() => props.onReturn(2)}>Create Account</button>
+                <button className='button-design' onClick={() => props.onReturn(1, '', {})}>Login</button>
+                <button className='button-design' onClick={() => props.onReturn(2, '', {})}>Create Account</button>
             </div>
         </div>
     );

@@ -4,22 +4,28 @@ import { useState } from 'react';
 
 // Define prop return function for changing component number back in main component.
 interface compProps {
-    onReturn: (newCompNum: number) => void;
+    onReturn: (newCompNum: number, currUsername: string, currSchedule: object) => void;
 }
 
 const Create: React.FC<compProps> = (props): JSX.Element => {
 
     // Users entered username.
-    let [username, setUsername] = useState<string>("");
+    let [username, setUsername] = useState<string>('');
 
     // Users entered password.
-    let [password, setPassword] = useState<string>("");
+    let [password, setPassword] = useState<string>('');
 
     // Flag for showing no password was included.
     let [noPassword, setNoPassword] = useState<boolean>(false);
 
     // Flag for showing no unsername was included.
     let [noUsername, setNoUsername] = useState<boolean>(false);
+
+    // Flag for showing an error occured when calling backend.
+    let [errorOccurred, setErrorOccurred] = useState<boolean>(false);
+
+    // Flag for showing if username already exists in database.
+    let [usernameExists, setUsernameExists] = useState<boolean>(false);
 
     // Need to implement a couple of possibilites.
     // 1. Username already exists.
@@ -33,28 +39,57 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
         // Reset state.
         setNoPassword(false);
         setNoUsername(false);
+
+        // Schedule object.
+        const schedule = {
+            'Monday': [],
+            'Tueday': [],
+            'Wednesday': [],
+            'Thursday': [],
+            'Friday': [],
+            'Saturday': [],
+            'Sunday': []
+        }
  
         // Send data and await response.
         const response = await fetch('http://localhost:5000/create', {
             method: 'POST',
             body: JSON.stringify({
                 username: username,
-                password: password
+                password: password,
+                schedule: schedule
             }),
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).catch((err) => { console.error(err); })
+        }).catch((err) => { 
+            console.error(err);
+            setErrorOccurred(true); 
+        })
 
         // If not null, parse the json.
         if (response) { 
-            var success = await response.json(); 
+            var success = await response.json();
+            setErrorOccurred(false);  
         } else { return; }
 
         // Check to see if account was created successfully.
         if (success.bool) {
-            props.onReturn(3);
-        } else { return; }
+            setUsernameExists(false);
+            props.onReturn(3, username, success.schedule);
+        } else {
+            // Change state to reflect accurate error.
+            switch (success.reason) {
+                case 1:
+                    setErrorOccurred(true);
+                    break;
+                case 2:
+                    setUsernameExists(true);
+                    break;
+                default: 
+                    break;
+            }
+        }
     }
 
     // Checks to see if user entered username and password.
@@ -76,6 +111,8 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
 
     return (
         <div className='component-container'>
+            {errorOccurred ? <p>An error occured, please try again.</p> : ''}
+            {usernameExists ? <p> Username already exists. Please use a different username.</p> : ''}
             <form className='form-container'>
                 <label className='label-container'>
                     Username:
@@ -89,7 +126,7 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
                 {noPassword ? <p>Please input a password.</p> : ''}
             </form>
             <div className='button-container'>
-                <button className='button-design' onClick={() => props.onReturn(0)}>Return to Home</button>
+                <button className='button-design' onClick={() => props.onReturn(0, '', {})}>Return to Home</button>
                 <button className='button-design' onClick={() => createAccount()}>Create Account</button>
             </div>
         </div>
