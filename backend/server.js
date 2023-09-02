@@ -1,23 +1,25 @@
 // Required libraries and constants.
-const MongoClient = requre('mongodb');
+const mongodb = require('mongodb');
 const express = require('express');
+const cors = require('cors');
+const parser = require('body-parser');
 const app = express();
-const port = 3000;
+const port = 5000;
 const url = 'mongodb+srv://cameronmcconne:<password>@scheduleit.xjdr7my.mongodb.net/?retryWrites=true&w=majority';
 
-// Will be used in requests from frontend.
-let collection;
+// CORS headers.
+app.use(cors());
 
 // Connect to the database.
-async function connectToDB() {
+const connectToDB = async () => {
 
     // Create the client and connect.
-    const client = new MongoClient(url);
+    const client = new mongodb.MongoClient(url);
     await client.connect();
 
     // Get database and users collection. 
     const database = client.db('ScheduleIt');
-    collection = database.collection('Users');
+    var collection = database.collection('Users');
 }
 
 // Connect to database and give values to 
@@ -29,8 +31,9 @@ app.get('/login', (req, res) => {
 });
 
 // Handles create account requests.
-app.get('/create', (req, res) => {
-
+app.post('/create', parser.json(), (req, res) => {
+    console.log(req.body);
+    res.send(JSON.stringify({bool: true}))
 })
 
 // Backend listens and awaits requests.
