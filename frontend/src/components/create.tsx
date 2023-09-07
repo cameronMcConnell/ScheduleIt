@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 // Define prop return function for changing component number back in main component.
 interface compProps {
-    onReturn: (newCompNum: number, currUsername: string, currSchedule: object) => void;
+    onReturn: (newCompNum: number, currUsername: string, currPassword: string, currSchedule: {[key: string]: boolean[][]}) => void;
 }
 
 const Create: React.FC<compProps> = (props): JSX.Element => {
@@ -40,15 +40,30 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
         setNoPassword(false);
         setNoUsername(false);
 
+        // Create array that will be used in schedule object.
+        const createScheduleArray = (): boolean[][] => {
+            let scheduleArray: boolean[][] = [];
+            for (let i: number = 0; i < 24; i++) {
+                scheduleArray.push([]);
+                for (let j: number = 0; j < 4; j++) {
+                    scheduleArray[i].push(false);
+                }
+            }
+            return scheduleArray;
+        }
+
+        // Schedule array used to do deep copies for object.
+        let scheduleArray: boolean[][] = createScheduleArray();
+
         // Schedule object.
         const schedule = {
-            'Monday': [],
-            'Tueday': [],
-            'Wednesday': [],
-            'Thursday': [],
-            'Friday': [],
-            'Saturday': [],
-            'Sunday': []
+            'Monday': [...scheduleArray],
+            'Tueday': [...scheduleArray],
+            'Wednesday': [...scheduleArray],
+            'Thursday': [...scheduleArray],
+            'Friday': [...scheduleArray],
+            'Saturday': [...scheduleArray],
+            'Sunday': [...scheduleArray]
         }
  
         // Send data and await response.
@@ -76,7 +91,7 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
         // Check to see if account was created successfully.
         if (success.bool) {
             setUsernameExists(false);
-            props.onReturn(3, username, success.schedule);
+            props.onReturn(3, username, password, success.schedule);
         } else {
             // Change state to reflect accurate error.
             switch (success.reason) {
@@ -126,7 +141,7 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
                 {noPassword ? <p>Please input a password.</p> : ''}
             </form>
             <div className='button-container'>
-                <button className='button-design' onClick={() => props.onReturn(0, '', {})}>Return to Home</button>
+                <button className='button-design' onClick={() => props.onReturn(0, '', '', {})}>Return to Home</button>
                 <button className='button-design' onClick={() => createAccount()}>Create Account</button>
             </div>
         </div>

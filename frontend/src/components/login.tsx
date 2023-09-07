@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 // Define prop return function for changing component number back in main component.
 interface compProps {
-    onReturn: (newCompNum: number, currUsername: string, currSchedule: object) => void;
+    onReturn: (newCompNum: number, currUsername: string, currPassword: string, currSchedule: {[key: string]: boolean[][]}) => void;
 }
 
 const Login: React.FC<compProps> = (props): JSX.Element => {
@@ -61,7 +61,7 @@ const Login: React.FC<compProps> = (props): JSX.Element => {
         // Check to see if operation was a success.
         if (success.bool) {
             setAccountNotExist(false);
-            props.onReturn(3, username, success.schedule);
+            props.onReturn(3, username, password, success.schedule);
         } else {
             // Change state to reflect accurate error.
             switch (success.reason) {
@@ -111,7 +111,7 @@ const Login: React.FC<compProps> = (props): JSX.Element => {
                 {noPassword ? <p>Please input a password.</p> : ''}
             </form>
             <div className='button-container'>
-                <button className='button-design' onClick={() => props.onReturn(0, '', {})}>Return to Home</button>
+                <button className='button-design' onClick={() => props.onReturn(0, '', '', {})}>Return to Home</button>
                 <button className='button-design' onClick={() => queryAccount()}>Login</button>
             </div>
         </div>

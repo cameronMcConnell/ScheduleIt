@@ -18,9 +18,10 @@ const Home = (): JSX.Element => {
     // Mapping for which component to render.
     let [currComp, setCurrComp] = useState<number>(0);
 
-    // No need to use state for these variables. Will be passed as props to a component.
-    let schedule: object = {};
-    let username: string = '';
+    // Have to use state in order for it to work and be passed as props to component.
+    let [username, setUsername] = useState<string>('');
+    let [password, setPassword] = useState<string>('');
+    let [schedule, setSchedule] = useState<{ [key: string]: boolean[][]}>({});
 
     // Switch to correct component to render.
     const switchComp = (compNum: number): JSX.Element => {
@@ -28,15 +29,16 @@ const Home = (): JSX.Element => {
             case 0: return <Init onReturn={changeCompNum} />;
             case 1: return <Login onReturn={changeCompNum} />;
             case 2: return <Create onReturn={changeCompNum} />;
-            case 3: return <Schedule />;
+            case 3: return <Schedule username={username} password={password} schedule={schedule}/>;
             default: return <Init onReturn={changeCompNum}/>;
         }
     }
 
     // Used for when a component needs to alter the current component state.
-    const changeCompNum = (newCompNum: number, currUsername: string, currSchedule: object): void => {
-        schedule = currSchedule;
-        username = currUsername;
+    const changeCompNum = (newCompNum: number, currUsername: string, currPassword: string, currSchedule: {[key: string]: boolean[][]}): void => {
+        setSchedule(currSchedule);
+        setUsername(currUsername);
+        setPassword(currPassword);
         setCurrComp(newCompNum);
     }
 

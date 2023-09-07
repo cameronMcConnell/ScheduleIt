@@ -11,8 +11,22 @@ input {
     font-size: 24px;
 }
 
+td {
+    font-size: 12px;
+    text-align: center;
+}
+
+table, td, th {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+table {
+    border-spacing: 0px;
+}
+
 .component-container {
-    width: 50%;
+    width: 60%;
     display: flex;
     flex-direction: column;
     row-gap: 16px;
