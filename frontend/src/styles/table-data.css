@@ -1,0 +1,7 @@
+.scheduled {
+    background-color: green;
+}
+
+.not-scheduled {
+    background-color: red;
+}
