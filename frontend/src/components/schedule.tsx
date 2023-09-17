@@ -8,12 +8,13 @@ import { useState, useEffect } from 'react';
 interface compProps {
     username: string,
     password: string,
-    schedule: { [key: string]: boolean[][]}
+    schedule: { [key: string]: boolean[][]},
+    onReturn: (newCompNum: number, currUsername: string, currPassword: string, currSchedule: {[key: string]: boolean[][]}) => void
 }
 
 const Schedule: React.FC<compProps> = (props): JSX.Element => {
 
-    // Change the height of the home div;
+    // Change the height of the home div.
     useEffect(() => {
         
         let style = document.getElementById('home-div')?.style;
@@ -23,6 +24,18 @@ const Schedule: React.FC<compProps> = (props): JSX.Element => {
             style.margin = '16px 0';
         }
     })
+
+    // Used for pressing sign out button.
+    const signOut = (): void => {
+        let style = document.getElementById('home-div')?.style;
+        
+        if (style) {
+            style.height = '100vh';
+            style.margin = '0';
+        }
+
+        props.onReturn(0, '', '', {});
+    } 
 
     // Format the schedule to render in the component easier.
     const formatScheduleRows = () => {
@@ -142,7 +155,10 @@ const Schedule: React.FC<compProps> = (props): JSX.Element => {
     return (
         <div className='component-container'>
             <p>{'Welcome: ' + props.username}</p>
-            <div className='button-container'><button className='button-design'>Save Schedule</button></div>
+            <div className='button-container'>
+                <button className='button-design' onClick={signOut}>Sign Out</button>
+                <button className='button-design'>Save Schedule</button>
+            </div>
             <table className='no-select'>
                 <tbody>
                     <tr>

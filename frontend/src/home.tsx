@@ -29,7 +29,7 @@ const Home = (): JSX.Element => {
             case 0: return <Init onReturn={changeCompNum} />;
             case 1: return <Login onReturn={changeCompNum} />;
             case 2: return <Create onReturn={changeCompNum} />;
-            case 3: return <Schedule username={username} password={password} schedule={schedule}/>;
+            case 3: return <Schedule onReturn={changeCompNum} username={username} password={password} schedule={schedule}/>;
             default: return <Init onReturn={changeCompNum}/>;
         }
     }
