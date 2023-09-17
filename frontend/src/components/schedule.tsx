@@ -98,29 +98,35 @@ const Schedule: React.FC<compProps> = (props): JSX.Element => {
 
     // On return for table data component.
     const changeSchedule = (inds: number[], scheduleBool: boolean): void => {
-        scheduleCopy[inds[0]][inds[1]] = scheduleBool;
-        setFormattedSchedule(scheduleCopy);
+        formattedSchedule[inds[0]][inds[1]] = scheduleBool;
+        setFormattedSchedule([...formattedSchedule]);
+        console.log(formattedSchedule);
     }
 
     // Clear the schedule for a specific day.
     const clearScheduleDay = (i: number): void => {
 
         for (let j: number = 0; j < 96; j++) {
-            console.log(scheduleCopy[j][i], j, i)
-            if (scheduleCopy[j][i]) {
-                scheduleCopy[j][i] = false;
+            if (formattedSchedule[j][i]) {
+                formattedSchedule[j][i] = false;
             }
         } 
 
-        setFormattedSchedule(scheduleCopy);
+        setFormattedSchedule([...formattedSchedule]);
+        console.log(formattedSchedule);
     }
 
     // Determine which element to return based on string value.
     const returnTableHeaders = (day: string, i: number): JSX.Element => {
         if (day) {
-            return <th key={day}>{day}<button className='button-design' onClick={() => clearScheduleDay(i)}>Clear Schedule</button></th>
+            return ( 
+                    <th key={day}>{day}
+                        <button className='trash-icon' onClick={() => clearScheduleDay(i)}><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg></button>
+                    </th>
+
+            );
         } else {
-            return <th key={day}>{day}</th>
+            return <th key={day}>{day}</th>;
         }
     }
 
@@ -130,15 +136,13 @@ const Schedule: React.FC<compProps> = (props): JSX.Element => {
     // State used for changing the view of the current schedule on the webpage.
     let [formattedSchedule, setFormattedSchedule] = useState<boolean[][]>(formatScheduleRows());
 
-    // Used for setting state.
-    let scheduleCopy = formatScheduleRows();
-
     // Used at the start of each row in the table.
     const timeArray: string[] = createTimeArray();
-    
+
     return (
         <div className='component-container'>
             <p>{'Welcome: ' + props.username}</p>
+            <div className='button-container'><button className='button-design'>Save Schedule</button></div>
             <table className='no-select'>
                 <tbody>
                     <tr>
@@ -148,9 +152,10 @@ const Schedule: React.FC<compProps> = (props): JSX.Element => {
                     </tr>
                     {formattedSchedule.map((row: boolean[], i: number) => (
                         <tr key={`row-${i}`}>
-                            <td>{timeArray[i]}</td>
+                            <td style={{whiteSpace: 'nowrap'}}>{timeArray[i]}</td>
                             {row.map((col: boolean, j: number) => (
-                                <TableData isScheduled={col} currentInds={[i, j]} changeSchedule={changeSchedule} key={`row-${i}-col-${j}`}></TableData>
+                                <TableData tdClassName={col ? 'scheduled' : 'not-scheduled'} isScheduled={col} 
+                                currentInds={[i, j]} changeSchedule={changeSchedule} key={`row-${i}-col-${j}`}></TableData>
                             ))}
                         </tr>
                     ))}

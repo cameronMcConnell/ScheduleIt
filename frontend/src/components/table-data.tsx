@@ -4,6 +4,7 @@ import { useState } from 'react';
 interface compProps {
     isScheduled: boolean,
     currentInds: number[],
+    tdClassName: string
     changeSchedule: (inds: number[], scheduleBool: boolean) => void
 }
 
@@ -28,11 +29,8 @@ const TableData: React.FC<compProps> = (props): JSX.Element => {
     // Use state to track inpended value of passed bool for future reference.
     let [returnBool, setReturnBool] = useState<boolean>(props.isScheduled);
 
-    // Used to set class name for background color.
-    const tdClassName: string = returnBool ? 'scheduled' : 'not-scheduled';
-
     return (
-        <td className={tdClassName} 
+        <td className={props.tdClassName} 
             onMouseDown={handleMouseDown}
             onMouseEnter={(e) => handleMouseEnter(e)}
         ></td>

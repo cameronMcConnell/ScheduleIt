@@ -21,6 +21,10 @@ table, td, th {
     border-collapse: collapse;
 }
 
+th {
+    padding: 6px;
+}
+
 table {
     border-spacing: 0px;
 }
@@ -36,6 +40,17 @@ table {
     display: flex;
     justify-content: center;
     column-gap: 16px;
+}
+
+.trash-icon {
+    font-size: 16px;
+    background-color: white;
+    margin-left: 6px;
+    border: none;
+}
+
+.trash-icon:hover {
+    cursor: pointer;
 }
 
 .button-design {

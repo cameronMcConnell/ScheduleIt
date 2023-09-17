@@ -5,7 +5,7 @@ const cors = require('cors');
 const parser = require('body-parser');
 const app = express();
 const port = 5000;
-const url = 'mongodb+srv://cameronmcconne:<password>@scheduleit.xjdr7my.mongodb.net/?retryWrites=true&w=majority';
+const url = 'mongodb://127.0.0.1:27017/';
 
 // Database collection used in responses.
 let collection;
@@ -15,7 +15,6 @@ app.use(cors());
 
 // Connect to the database.
 const connectToDB = async () => {
-
     // Create the client and connect.
     const client = new mongodb.MongoClient(url);
     await client.connect();
