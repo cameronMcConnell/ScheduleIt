@@ -1,10 +1,11 @@
 import '../styles/login.css';
 import '../styles/shared.css';
+import React from 'react';
 import { useState } from 'react';
 
 // Define prop return function for changing component number back in main component.
 interface compProps {
-    onReturn: (newCompNum: number, currUsername: string, currPassword: string, currSchedule: {[key: string]: boolean[][]}) => void;
+    onReturn: (newCompNum: number, currUsername: string, currPassword: string, currSchedule: boolean[][]) => void;
 }
 
 const Login: React.FC<compProps> = (props): JSX.Element => {
@@ -27,6 +28,9 @@ const Login: React.FC<compProps> = (props): JSX.Element => {
     // Flag for showing the input username doesn't exist in database.
     let [accountNotExist, setAccountNotExist] = useState<boolean>(false);
 
+    // Used to render loading icon.
+    let [isLoading, setIsLoading] = useState<boolean>(false);
+
     // Check to see if users account exists in the database.
     const queryAccount = async () => {
         
@@ -36,6 +40,7 @@ const Login: React.FC<compProps> = (props): JSX.Element => {
         // Reset state.
         setNoPassword(false);
         setNoUsername(false);
+        setIsLoading(true);
 
         // Check to see if username and password exists in the database.
         const response = await fetch('http://localhost:5000/login', {
@@ -51,6 +56,9 @@ const Login: React.FC<compProps> = (props): JSX.Element => {
             console.error(err);
             setErrorOccurred(true); 
         })
+
+        // Set state accordingly.
+        setIsLoading(false);
 
         // Check to see if response is not null.
         if (response) {
@@ -111,8 +119,9 @@ const Login: React.FC<compProps> = (props): JSX.Element => {
                 {noPassword ? <p>Please input a password.</p> : ''}
             </form>
             <div className='button-container'>
-                <button className='button-design' onClick={() => props.onReturn(0, '', '', {})}>Return to Home</button>
+                <button className='button-design' onClick={() => props.onReturn(0, '', '', [])}>Return to Home</button>
                 <button className='button-design' onClick={() => queryAccount()}>Login</button>
+                {isLoading ? <i className="fa fa-repeat fa-spin"></i> : ''}
             </div>
         </div>
     );

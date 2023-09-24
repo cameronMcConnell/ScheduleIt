@@ -33,7 +33,7 @@ connectToDB();
 // 2 : Account doesn't exist
 app.post('/login', parser.json(), async (req, res) => {
     try {
-        const result = await collection.findOne(req.body);
+        const result = await collection.findOne({ username: req.body.username, password: req.body.password });
         if (result) {
             res.send(JSON.stringify({bool: true, schedule: result.schedule}));
         } else {
@@ -51,7 +51,7 @@ app.post('/login', parser.json(), async (req, res) => {
 app.post('/create', parser.json(), async (req, res) => {
     // Check to see if username exists in database.
     try {
-        const result = await collection.findOne({ username: req.body.username });
+        const result = await collection.findOne({ username: req.body.username, password: req.body.password });
         if (result) {
             res.send(JSON.stringify({bool: false, reason: 2}));
         }
@@ -65,6 +65,18 @@ app.post('/create', parser.json(), async (req, res) => {
         }
     } catch (err) {
         res.send(JSON.stringify({bool: false, reason: 1}));
+    }
+})
+
+// Save updated schedule to user.
+app.post('/save', parser.json(), async (req, res) => {
+    try {
+        await collection.updateOne(
+            {username: req.body.username, password: req.body.password}, {$set: {schedule: req.body.schedule}}
+        );
+        res.send(JSON.stringify({reason: 1}));
+    } catch (err) {
+        res.send(JSON.stringify({reason: 2}));
     }
 })
 

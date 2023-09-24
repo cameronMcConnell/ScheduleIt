@@ -1,5 +1,6 @@
 import './styles/home.css';
 import './styles/shared.css';
+import React from 'react';
 import Init from './components/init';
 import Login from './components/login';
 import Create from './components/create';
@@ -21,7 +22,7 @@ const Home = (): JSX.Element => {
     // Have to use state in order for it to work and be passed as props to component.
     let [username, setUsername] = useState<string>('');
     let [password, setPassword] = useState<string>('');
-    let [schedule, setSchedule] = useState<{ [key: string]: boolean[][]}>({});
+    let [schedule, setSchedule] = useState<boolean[][]>([]);
 
     // Switch to correct component to render.
     const switchComp = (compNum: number): JSX.Element => {
@@ -35,7 +36,7 @@ const Home = (): JSX.Element => {
     }
 
     // Used for when a component needs to alter the current component state.
-    const changeCompNum = (newCompNum: number, currUsername: string, currPassword: string, currSchedule: {[key: string]: boolean[][]}): void => {
+    const changeCompNum = (newCompNum: number, currUsername: string, currPassword: string, currSchedule: boolean[][]): void => {
         setSchedule(currSchedule);
         setUsername(currUsername);
         setPassword(currPassword);

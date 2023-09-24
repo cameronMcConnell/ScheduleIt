@@ -42,14 +42,14 @@ table {
     column-gap: 16px;
 }
 
-.trash-icon {
+.icon {
     font-size: 16px;
     background-color: white;
     margin-left: 6px;
     border: none;
 }
 
-.trash-icon:hover {
+.icon:hover {
     cursor: pointer;
 }
 
@@ -61,6 +61,18 @@ table {
 }
 
 .button-design:hover {
+    cursor: pointer;
+    background-color: lightgray;
+}
+
+.small-button-design {
+    font-size: 12px;
+    padding: 2px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.small-button-design:hover {
     cursor: pointer;
     background-color: lightgray;
 }

@@ -1,9 +1,10 @@
 import '../styles/init.css';
 import '../styles/shared.css';
+import React from 'react';
 
 // Define prop return function for changing component number back in main component.
 interface compProps {
-    onReturn: (newCompNum: number, currUsername: string, currPassword: string, currSchedule: {[key: string]: boolean[][]}) => void;
+    onReturn: (newCompNum: number, currUsername: string, currPassword: string, currSchedule: boolean[][]) => void;
 }
 
 const Init: React.FC<compProps> = (props): JSX.Element => {
@@ -11,13 +12,13 @@ const Init: React.FC<compProps> = (props): JSX.Element => {
         <div className='component-container'>
             <p>
                 ScheduleIt is a scheduling application that lets you create an account, 
-                save your weekly schedule to it, and view it next time you need to log in.
+                save your weekly schedule to it, and view it next time you log back in.
                 Backend implemented using Expo.js, Node.js, MongoDB and frontend with
                 React.js.
             </p>
             <div className='button-container'>
-                <button className='button-design' onClick={() => props.onReturn(1, '', '', {})}>Login</button>
-                <button className='button-design' onClick={() => props.onReturn(2, '', '', {})}>Create Account</button>
+                <button className='button-design' onClick={() => props.onReturn(1, '', '', [])}>Login</button>
+                <button className='button-design' onClick={() => props.onReturn(2, '', '', [])}>Create Account</button>
             </div>
         </div>
     );

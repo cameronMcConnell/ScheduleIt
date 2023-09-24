@@ -1,10 +1,12 @@
+import React from 'react';
 import { useState } from 'react';
 
 // Props for changing if something is scheduled on a specific day.
 interface compProps {
     isScheduled: boolean,
     currentInds: number[],
-    tdClassName: string
+    tdClassName: string,
+    expectedDay: number
     changeSchedule: (inds: number[], scheduleBool: boolean) => void
 }
 
@@ -12,14 +14,16 @@ const TableData: React.FC<compProps> = (props): JSX.Element => {
 
     // Use this to fix issue with schedule not holding state. Hopefully.
     const handleMouseDown = (): void => {
-        const newBool: boolean = !returnBool;
-        setReturnBool(newBool);
-        props.changeSchedule(props.currentInds, newBool);
+        if (props.currentInds[1] === props.expectedDay) {
+            const newBool: boolean = !returnBool;
+            setReturnBool(newBool);
+            props.changeSchedule(props.currentInds, newBool);
+        }
     }
 
     // Handles if mouse enters element.
     const handleMouseEnter = (e: React.MouseEvent): void => {
-        if (e.buttons === 1) {
+        if (props.currentInds[1] === props.expectedDay && e.buttons === 1) {
             const newBool: boolean = !returnBool;
             setReturnBool(newBool);
             props.changeSchedule(props.currentInds, newBool);

@@ -1,10 +1,11 @@
 import '../styles/create.css';
 import '../styles/shared.css';
+import React from 'react';
 import { useState } from 'react';
 
 // Define prop return function for changing component number back in main component.
 interface compProps {
-    onReturn: (newCompNum: number, currUsername: string, currPassword: string, currSchedule: {[key: string]: boolean[][]}) => void;
+    onReturn: (newCompNum: number, currUsername: string, currPassword: string, currSchedule: boolean[][]) => void;
 }
 
 const Create: React.FC<compProps> = (props): JSX.Element => {
@@ -27,6 +28,9 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
     // Flag for showing if username already exists in database.
     let [usernameExists, setUsernameExists] = useState<boolean>(false);
 
+    // Used to render loading icon.
+    let [isLoading, setIsLoading] = useState<boolean>(false);
+
     // Need to implement a couple of possibilites.
     // 1. Username already exists.
     // 2. No username supplied.
@@ -39,32 +43,10 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
         // Reset state.
         setNoPassword(false);
         setNoUsername(false);
-
-        // Create array that will be used in schedule object.
-        const createScheduleArray = (): boolean[][] => {
-            let scheduleArray: boolean[][] = [];
-            for (let i: number = 0; i < 24; i++) {
-                scheduleArray.push([]);
-                for (let j: number = 0; j < 4; j++) {
-                    scheduleArray[i].push(false);
-                }
-            }
-            return scheduleArray;
-        }
+        setIsLoading(true);
 
         // Schedule array used to do deep copies for object.
-        let scheduleArray: boolean[][] = createScheduleArray();
-
-        // Schedule object.
-        const schedule = {
-            'Monday': [...scheduleArray],
-            'Tueday': [...scheduleArray],
-            'Wednesday': [...scheduleArray],
-            'Thursday': [...scheduleArray],
-            'Friday': [...scheduleArray],
-            'Saturday': [...scheduleArray],
-            'Sunday': [...scheduleArray]
-        }
+        const schedule: boolean[][] = Array.from({length: 96}, () => Array.from({length: 7}, () => false));
  
         // Send data and await response.
         const response = await fetch('http://localhost:5000/create', {
@@ -82,8 +64,11 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
             setErrorOccurred(true); 
         })
 
+        // Update state accordingly.
+        setIsLoading(false);
+
         // If not null, parse the json.
-        if (response) { 
+        if (response) {
             var success = await response.json();
             setErrorOccurred(false);  
         } else { return; }
@@ -91,7 +76,7 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
         // Check to see if account was created successfully.
         if (success.bool) {
             setUsernameExists(false);
-            props.onReturn(3, username, password, success.schedule);
+            props.onReturn(3, username, password, schedule);
         } else {
             // Change state to reflect accurate error.
             switch (success.reason) {
@@ -109,6 +94,7 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
 
     // Checks to see if user entered username and password.
     const validateInput = (): boolean => {
+        
         // Code to handle parts of the UI to render.
         let flag = true;
 
@@ -141,8 +127,9 @@ const Create: React.FC<compProps> = (props): JSX.Element => {
                 {noPassword ? <p>Please input a password.</p> : ''}
             </form>
             <div className='button-container'>
-                <button className='button-design' onClick={() => props.onReturn(0, '', '', {})}>Return to Home</button>
+                <button className='button-design' onClick={() => props.onReturn(0, '', '', [])}>Return to Home</button>
                 <button className='button-design' onClick={() => createAccount()}>Create Account</button>
+                {isLoading ? <i className="fa fa-repeat fa-spin"></i> : ''}
             </div>
         </div>
     );
